@@ -18,9 +18,56 @@ if($akses != 'dokter'){
   die();
 }
 
-// $pasien = query("SELECT periksa.id AS id_periksa, pasien.id AS id_pasien, periksa.catatan AS catatan, daftar_poli.no_antrian AS no_antrian, pasien.nama AS nama_pasien, daftar_poli.keluhan AS keluhan, daftar_poli.status_periksa AS status_periksa FROM pasien INNER JOIN daftar_poli ON pasien.id = daftar_poli.id_pasien LEFT JOIN periksa ON daftar_poli.id = periksa.id_daftar_poli");
-// $periksa = query("SELECT * FROM periksa");
-// $obat = query("SELECT * FROM obat");
+if(isset($_POST["submit"])){
+  //cek validasi
+  if(empty($_POST["hari"]) || empty($_POST["jam_mulai"]) || empty($_POST["jam_selesai"])) {
+    echo "
+      <script>
+      alert('Data tidak boleh kosong');
+      document.location.href = '../jadwal_periksa/create.php';
+      </script>
+    ";
+    die;
+  } else {
+    if(tambahJadwalPeriksa($_POST) > 0){
+      echo "
+        <script>
+        alert('Data berhasil ditambahkan');
+        document.location.href = '../jadwal_periksa';
+        </script>
+      ";
+    } else if(tambahJadwalPeriksa($_POST) == -2){
+      echo "
+        <script>
+        alert('Data gagal ditambahkan, jadwal periksa sudah ada');
+        document.location.href = '../jadwal_periksa/create.php';
+        </script>
+      ";
+    } else if(tambahJadwalPeriksa($_POST) == -1){
+      echo "
+        <script>
+        alert('Data gagal ditambahkan');
+        document.location.href = '../jadwal_periksa';
+        </script>
+      ";
+    }
+  }
+}
+
+// $dokter_id = $_SESSION['id']; // Assuming the doctor ID is stored in the session
+
+// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//     $hari = $_POST['hari'];
+//     $jam_mulai = $_POST['jam_mulai'];
+//     $jam_selesai = $_POST['jam_selesai'];
+
+//     // Insert the new schedule into the database
+//     $query = $pdo->prepare("INSERT INTO jadwal_periksa (id_dokter, hari, jam_mulai, jam_selesai) VALUES (?, ?, ?, ?)");
+//     $query->execute([$dokter_id, $hari, $jam_mulai, $jam_selesai]);
+
+//     echo "<meta http-equiv='refresh' content='0; url=index.php'>";
+//     die();
+// }
 ?>
 
 <!DOCTYPE html>
@@ -201,40 +248,45 @@ if($akses != 'dokter'){
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-      <a href="/BK_Poliklinik/pages/dokter/jadwal_periksa/create.php" class="btn btn-success rounded-pill px-3 mb-3 align-content-between" style="float: right;">+ Tambah Jadwal Periksa</a>
-      <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Dokter</th>
-                        <th>Hari</th>
-                        <th>Jam Mulai</th>
-                        <th>Jam Selesai</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $result = $pdo->query("SELECT jadwal_periksa.*, dokter.nama FROM jadwal_periksa LEFT JOIN dokter ON jadwal_periksa.id_dokter = dokter.id WHERE dokter.id = '$id'");
-                    $no = 1;
-                    while($data = $result->fetch(PDO::FETCH_ASSOC)){
-                    ?>
-                    <tr>
-                      <td><?php echo $no++ ?></td>
-                      <td><?php echo $data['nama'] ?></td>
-                      <td><?php echo $data['hari'] ?></td>
-                      <td><?php echo $data['jam_mulai'] ?></td>
-                      <td><?php echo $data['jam_selesai'] ?></td>
-                      <td>
-                        <a href="edit.php?page=dokter.php&id=<?php echo $data['id'] ?>" class="btn btn-success rounded-pill px-3">Edit</a>
-                        <a href="delete.php?page=dokter.php&id=<?php echo $data['id'] ?>&aksi=hapus" class="btn btn-danger rounded-pill px-3">Hapus</a>
-                      </td>
-                    </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
+      <div class="row">
+          <div class="col-md-12">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Form Tambah Jadwal Periksa</h3>
+              </div>
+              <form method="POST" action="">
+                <div class="card-body">
+                <div class="form-group">
+                    <label for="id">Jam Mulai</label>
+                    <input type="hidden" class="form-control" id="id" name="id" value='<?= $id ?>' required>
+                  </div>
+                  <div class="form-group">
+                    <label for="hari">Hari</label>
+                    <select class="form-control" id="hari" name="hari" required>
+                      <option value="Senin">Senin</option>
+                      <option value="Selasa">Selasa</option>
+                      <option value="Rabu">Rabu</option>
+                      <option value="Kamis">Kamis</option>
+                      <option value="Jumat">Jumat</option>
+                      <option value="Sabtu">Sabtu</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="jam_mulai">Jam Mulai</label>
+                    <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="jam_selesai">Jam Selesai</label>
+                    <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" required>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary" name='submit'>Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->

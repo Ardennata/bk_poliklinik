@@ -117,7 +117,7 @@ if($akses != 'dokter'){
           <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Admin</a>
+          <a href="#" class="d-block">Dokter</a>
         </div>
       </div>
 
@@ -160,7 +160,7 @@ if($akses != 'dokter'){
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/BK_Poliklinik/pages/dokter/profil" class="nav-link">
               <p>
                 Profil
                 <span class="right badge badge-danger">Dokter</span>
@@ -195,7 +195,7 @@ if($akses != 'dokter'){
 
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
+    <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-lg-3 col-6">

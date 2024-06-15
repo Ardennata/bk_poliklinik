@@ -43,31 +43,33 @@ $total_biaya_obat = 0;
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="../../../../plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <link rel="stylesheet" href="../../../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
   <!-- iCheck -->
-  <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <link rel="stylesheet" href="../../../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- JQVMap -->
-  <link rel="stylesheet" href="../../plugins/jqvmap/jqvmap.min.css">
+  <link rel="stylesheet" href="../../../../plugins/jqvmap/jqvmap.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="../../../../dist/css/adminlte.min.css">
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <link rel="stylesheet" href="../../../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
-  <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="../../../../plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
-  <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.min.css">
+  <link rel="stylesheet" href="../../../../plugins/summernote/summernote-bs4.min.css">
+  <!-- select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
   <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="../../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div>
+  <!-- <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="../../../../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div> -->
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -120,7 +122,7 @@ $total_biaya_obat = 0;
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
-      <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <img src="../../../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">BK-Poliklinik</span>
     </a>
 
@@ -129,10 +131,10 @@ $total_biaya_obat = 0;
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="../../../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Admin</a>
+          <a href="#" class="d-block">Dokter</a>
         </div>
       </div>
 
@@ -151,7 +153,7 @@ $total_biaya_obat = 0;
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/BK_Poliklinik/pages/dokter/jadwal_periksa" class="nav-link">
               <p>
                 Jadwal Periksa
                 <span class="right badge badge-danger">Dokter</span>
@@ -159,7 +161,7 @@ $total_biaya_obat = 0;
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/BK_Poliklinik/pages/dokter/memeriksa_pasien" class="nav-link">
               <p>
                 Memeriksa Pasien
                 <span class="right badge badge-danger">Dokter</span>
@@ -167,7 +169,7 @@ $total_biaya_obat = 0;
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/BK_Poliklinik/pages/dokter/riwayat_pasien" class="nav-link">
               <p>
                 Riwayat Pasien
                 <span class="right badge badge-danger">Dokter</span>
@@ -175,7 +177,7 @@ $total_biaya_obat = 0;
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/BK_Poliklinik/pages/dokter/profil" class="nav-link">
               <p>
                 Profil
                 <span class="right badge badge-danger">Dokter</span>
@@ -219,11 +221,11 @@ $total_biaya_obat = 0;
             <form action="" method="POST">
               <div class="form-group">
                 <label for="nama_pasien">Nama Pasien</label>
-                <input type="text" class="form-control" id="nama_pasien" name="nama_pasien" value="<?php echo $nama_pasien; ?>">
+                <input type="text" class="form-control" id="nama_pasien" name="nama_pasien" value="<?php echo $pasien['nama_pasien']; ?>" readonly>
               </div>
               <div class="form-group">
                 <label for="tgl_periksa">Tanggal Periksa</label>
-                <input type="text" class="form-control" id="tgl_periksa" name="tgl_periksa" value="">
+                <input type="datetime-local" class="form-control" id="tgl_periksa" name="tgl_periksa" value="">
               </div>
               <div class="form-group">
                 <label for="catatan">Catatan</label>
@@ -231,15 +233,15 @@ $total_biaya_obat = 0;
               </div>
               <div class="form-group">
                 <label for="nama_pasien">Obat</label>
-                <select name="form-control" id="obat[]" multiple id="id_obat">
-                  <?php foreach ($obat as $obats) : ?>
-                    <option value="<?= $obats['id']; ?>|<?= $obats['harga'] ?>"><?= $obats['nama_obat']; ?></option>
-                  <?php endforeach; ?>
+                <select class="form-control" name="obat[]" multiple="multiple" id="id_obat">
+                <?php foreach ($obat as $obats) : ?>
+                    <option value="<?= $obats['id']; ?>|<?= $obats['harga'] ?>"><?= $obats['nama_obat']; ?> - <?= $obats['kemasan']; ?> - Rp.<?= $obats['harga']; ?></option>
+                <?php endforeach; ?>
                 </select>
               </div>
               <div class="form-group">
                 <label for="total_harga">Total Harga</label>
-                <input type="text" class="form-control" id="harga" name="harga">
+                <input type="text" class="form-control" id="harga" name="harga" readonly value="">
               </div>
               <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary" id="simpan_periksa" name="simpan_periksa">
@@ -252,8 +254,10 @@ $total_biaya_obat = 0;
                 $tgl_periksa = $_POST['tgl_periksa'];
                 $catatan = $_POST['catatan'];
                 $obat = $_POST['obat'];
-                $id_daftar_poli = $passiens['id_daftar_poli'];
+                $id_daftar_poli = $pasien['id_daftar_poli'];
                 $id_obat = [];
+                $total_biaya_obat = 0;
+
                 for($i = 0; $i < count($obat); $i++){
                   $data_obat = explode("|", $obat[$i]);
                   $id_obat[] = $data_obat[0];
@@ -261,15 +265,19 @@ $total_biaya_obat = 0;
                 }
                 $total_biaya = $biaya_periksa + $total_biaya_obat;
 
-                $query = "INSERT INTO periksa (id_daftar_poli, tgl_periksa, catatan, biaya_periksa) VALUES ('$id_daftar_poli', '$tgl_periksa', '$catatan', '$total_biaya')";
+                $query = "INSERT INTO periksa (id_daftar_poli, tgl_periksa, catatan, biaya_periksa) VALUES ($id_daftar_poli, '$tgl_periksa', '$catatan', '$total_biaya')";
                 $result = mysqli_query($conn, $query);
 
                 $query2 = "INSERT INTO detail_periksa (id_obat, id_periksa) VALUES ";
                 $periksa_id = mysqli_insert_id($conn);
+                $valuePairs = "";
                 for($i = 0; $i < count($id_obat); $i++) {
-                  $query2 .= "('$id_obat[$i]', '$periksa_id')";
+                  $valuePairs .= "($id_obat[$i], $periksa_id)";
+                  if($i < count($id_obat) - 1){
+                    $valuePairs .= ", ";
+                  }
                 }
-                $query2 = substr($query2, 0, -1);
+                $query2 .= $valuePairs;
                 $result2 = mysqli_query($conn, $query2);
 
                 $query3 = "UPDATE daftar_poli SET status_periksa = '1' WHERE id = $id_daftar_poli";
@@ -295,11 +303,14 @@ $total_biaya_obat = 0;
             ?>
           </div>
         </div>
+        <!-- jquery -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
           $(document).ready(function() {
             $('#id_obat').select2();
             $('#id_obat').on('change.select2', function (e) {
-              var selectedValuesArray = ${this}.val();
+              var selectedValuesArray = $(this).val();
 
               //calculate the sum
               var sum = 150000;
@@ -330,39 +341,35 @@ $total_biaya_obat = 0;
 </div>
 <!-- ./wrapper -->
 
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></scrip>
-<!-- jQuery UI 1.11.4 -->
-<script src="../../plugins/jquery-ui/jquery-ui.min.js"></scrip>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- ChartJS -->
-<script src="../../plugins/chart.js/Chart.min.js"></script>
+<script src="../../../../plugins/chart.js/Chart.min.js"></script>
 <!-- Sparkline -->
-<script src="../../plugins/sparklines/sparkline.js"></script>
+<script src="../../../../plugins/sparklines/sparkline.js"></script>
 <!-- JQVMap -->
-<script src="../../plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="../../plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<script src="../../../../plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="../../../../plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
 <!-- jQuery Knob Chart -->
-<script src="../../plugins/jquery-knob/jquery.knob.min.js"></script>
+<script src="../../../../plugins/jquery-knob/jquery.knob.min.js"></script>
 <!-- daterangepicker -->
-<script src="../../plugins/moment/moment.min.js"></script>
-<script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+<script src="../../../../plugins/moment/moment.min.js"></script>
+<script src="../../../../plugins/daterangepicker/daterangepicker.js"></script>
 <!-- Tempusdominus Bootstrap 4 -->
-<script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="../../../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <!-- Summernote -->
-<script src="../../plugins/summernote/summernote-bs4.min.js"></script>
+<script src="../../../../plugins/summernote/summernote-bs4.min.js"></script>
 <!-- overlayScrollbars -->
-<script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<script src="../../../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.js"></script>
+<script src="../../../../dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
+<script src="../../../../dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="../../dist/js/pages/dashboard.js"></script>
+<script src="../../../../dist/js/pages/dashboard.js"></script>
 </body>
 </html>

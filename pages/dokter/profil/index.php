@@ -11,16 +11,37 @@ if(isset($_SESSION['login'])){
 
 $nama = $_SESSION['username'];
 $akses = $_SESSION['akses'];
-$id = $_SESSION['id'];
 
 if($akses != 'dokter'){
   echo "<meta http-equiv='refresh' content='0; url=../..'>";
   die();
 }
 
-// $pasien = query("SELECT periksa.id AS id_periksa, pasien.id AS id_pasien, periksa.catatan AS catatan, daftar_poli.no_antrian AS no_antrian, pasien.nama AS nama_pasien, daftar_poli.keluhan AS keluhan, daftar_poli.status_periksa AS status_periksa FROM pasien INNER JOIN daftar_poli ON pasien.id = daftar_poli.id_pasien LEFT JOIN periksa ON daftar_poli.id = periksa.id_daftar_poli");
-// $periksa = query("SELECT * FROM periksa");
-// $obat = query("SELECT * FROM obat");
+$id = $_SESSION['id'];
+$query = $pdo->prepare("SELECT * FROM dokter WHERE id = ?");
+$query->execute([$id]);
+$doctor = $query->fetch();
+
+if ($doctor === false) {
+  // Handle the case where no doctor data was found
+  echo "$id";
+  die();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Handle the form submission
+    $nama = $_POST['nama'];
+    $alamat = $_POST['alamat'];
+    $no_hp = $_POST['no_hp'];
+    $id_poli = $_POST['id_poli'];
+
+    // Update the doctor's information
+    $updateQuery = $pdo->prepare("UPDATE dokter SET nama = ?, alamat = ?, no_hp = ?, id_poli = ? WHERE id = ?");
+    $updateQuery->execute([$nama, $alamat, $no_hp, $id_poli, $id]);
+
+    echo "<meta http-equiv='refresh' content='0; url=index.php'>";
+    die();
+}
 ?>
 
 <!DOCTYPE html>
@@ -122,7 +143,7 @@ if($akses != 'dokter'){
           <img src="../../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Admin</a>
+          <a href="#" class="d-block">Dokter</a>
         </div>
       </div>
 
@@ -185,7 +206,7 @@ if($akses != 'dokter'){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Jadwal Periksa</h1>
+            <h1 class="m-0">Admin</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -200,42 +221,40 @@ if($akses != 'dokter'){
 
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
-      <a href="/BK_Poliklinik/pages/dokter/jadwal_periksa/create.php" class="btn btn-success rounded-pill px-3 mb-3 align-content-between" style="float: right;">+ Tambah Jadwal Periksa</a>
-      <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Dokter</th>
-                        <th>Hari</th>
-                        <th>Jam Mulai</th>
-                        <th>Jam Selesai</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $result = $pdo->query("SELECT jadwal_periksa.*, dokter.nama FROM jadwal_periksa LEFT JOIN dokter ON jadwal_periksa.id_dokter = dokter.id WHERE dokter.id = '$id'");
-                    $no = 1;
-                    while($data = $result->fetch(PDO::FETCH_ASSOC)){
-                    ?>
-                    <tr>
-                      <td><?php echo $no++ ?></td>
-                      <td><?php echo $data['nama'] ?></td>
-                      <td><?php echo $data['hari'] ?></td>
-                      <td><?php echo $data['jam_mulai'] ?></td>
-                      <td><?php echo $data['jam_selesai'] ?></td>
-                      <td>
-                        <a href="edit.php?page=dokter.php&id=<?php echo $data['id'] ?>" class="btn btn-success rounded-pill px-3">Edit</a>
-                        <a href="delete.php?page=dokter.php&id=<?php echo $data['id'] ?>&aksi=hapus" class="btn btn-danger rounded-pill px-3">Hapus</a>
-                      </td>
-                    </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
-      </div><!-- /.container-fluid -->
+    <div class="container-fluid">
+    <div class="row">
+          <div class="col-md-12">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Profil Dokter</h3>
+              </div>
+              <form method="POST" action="">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="nama">Nama</label>
+                    <input type="text" class="form-control" id="nama" name="nama" value="<?= htmlspecialchars($doctor['nama']); ?>" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="alamat">Alamat</label>
+                    <input type="text" class="form-control" id="alamat" name="alamat" value="<?= htmlspecialchars($doctor['alamat']); ?>" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="no_hp">No Telepon</label>
+                    <input type="text" class="form-control" id="no_hp" name="no_hp" value="<?= htmlspecialchars($doctor['no_hp']); ?>" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="id_poli">No Telepon</label>
+                    <input type="text" class="form-control" id="id_poli" name="id_poli" value="<?= htmlspecialchars($doctor['id_poli']); ?>" required>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
   </div>

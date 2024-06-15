@@ -17,9 +17,9 @@ if($akses != 'dokter'){
   die();
 }
 
-// $pasien = query("SELECT periksa.id AS id_periksa, pasien.id AS id_pasien, periksa.catatan AS catatan, daftar_poli.no_antrian AS no_antrian, pasien.nama AS nama_pasien, daftar_poli.keluhan AS keluhan, daftar_poli.status_periksa AS status_periksa FROM pasien INNER JOIN daftar_poli ON pasien.id = daftar_poli.id_pasien LEFT JOIN periksa ON daftar_poli.id = periksa.id_daftar_poli");
-// $periksa = query("SELECT * FROM periksa");
-// $obat = query("SELECT * FROM obat");
+$pasien = query("SELECT periksa.id AS id_periksa, pasien.id AS id_pasien, periksa.catatan AS catatan, daftar_poli.no_antrian AS no_antrian, pasien.nama AS nama_pasien, daftar_poli.keluhan AS keluhan, daftar_poli.status_periksa AS status_periksa FROM pasien INNER JOIN daftar_poli ON pasien.id = daftar_poli.id_pasien LEFT JOIN periksa ON daftar_poli.id = periksa.id_daftar_poli");
+$periksa = query("SELECT * FROM periksa");
+$obat = query("SELECT * FROM obat");
 ?>
 
 <!DOCTYPE html>
@@ -54,9 +54,9 @@ if($akses != 'dokter'){
 <div class="wrapper">
 
   <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
+  <!-- <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="../../../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div>
+  </div> -->
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -121,7 +121,7 @@ if($akses != 'dokter'){
           <img src="../../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Admin</a>
+          <a href="#" class="d-block">Dokter</a>
         </div>
       </div>
 
@@ -164,7 +164,7 @@ if($akses != 'dokter'){
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/BK_Poliklinik/pages/dokter/profil" class="nav-link">
               <p>
                 Profil
                 <span class="right badge badge-danger">Dokter</span>
@@ -210,23 +210,20 @@ if($akses != 'dokter'){
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $result = $pdo->query("SELECT daftar_poli.*, pasien.nama FROM daftar_poli LEFT JOIN pasien ON daftar_poli.id_pasien = pasien.id");
-                    $no = 1;
-                    while($data = $result->fetch(PDO::FETCH_ASSOC)){
-                    ?>
+                    <?php foreach($pasien as $pasiens) : ?>
                     <tr>
-                      <td><?php echo $data['no_antrian'] ?></td>
-                      <td><?php echo $data['nama'] ?></td>
-                      <td><?php echo $data['keluhan'] ?></td>
+                      <td id="id"><?php echo $pasiens['no_antrian'] ?></td>
+                      <td><?php echo $pasiens['nama_pasien'] ?></td>
+                      <td><?php echo $pasiens['keluhan'] ?></td>
                       <td>
-                        <a href="index.php?page=dokter.php&id=<?php echo $data['id'] ?>" class="btn btn-success rounded-pill px-3">Periksa</a>
-                        <a href="index.php?page=dokter.php&id=<?php echo $data['id'] ?>&aksi=hapus" class="btn btn-danger rounded-pill px-3">Edit</a>
+                        <?php if($pasiens['status_periksa'] == 0) { ?>
+                          <a href="create.php/<?= $pasiens['id_pasien'] ?>" class="btn btn-primary rounded-pill px-3">Periksa</a>
+                        <?php } else { ?>
+                          <a href="edit.php/<?= $pasiens['id_periksa'] ?>" class="btn btn-warning rounded-pill px-3">Edit</a>
+                        <?php } ?>
                       </td>
                     </tr>
-                    <?php
-                    }
-                    ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
       </div><!-- /.container-fluid -->

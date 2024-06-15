@@ -17,9 +17,12 @@ if($akses != 'dokter'){
   die();
 }
 
-// $pasien = query("SELECT periksa.id AS id_periksa, pasien.id AS id_pasien, periksa.catatan AS catatan, daftar_poli.no_antrian AS no_antrian, pasien.nama AS nama_pasien, daftar_poli.keluhan AS keluhan, daftar_poli.status_periksa AS status_periksa FROM pasien INNER JOIN daftar_poli ON pasien.id = daftar_poli.id_pasien LEFT JOIN periksa ON daftar_poli.id = periksa.id_daftar_poli");
-// $periksa = query("SELECT * FROM periksa");
-// $obat = query("SELECT * FROM obat");
+// Define the formatRupiah function
+function formatRupiah($angka){
+  $hasil = "Rp " . number_format($angka,2,',','.');
+  return $hasil;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -49,14 +52,37 @@ if($akses != 'dokter'){
   <link rel="stylesheet" href="../../../plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="../../../plugins/summernote/summernote-bs4.min.css">
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Custom CSS for Grid -->
+  <style>
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 10px;
+    }
+    .grid-item {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    .grid-header {
+      font-weight: bold;
+      background-color: #f8f9fa;
+    }
+  </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
   <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
+  <!-- <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="../../../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div>
+  </div> -->
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -156,7 +182,7 @@ if($akses != 'dokter'){
             </a>
           </li>
           <li class="nav-item">
-            <a href="memeriksa_pasien" class="nav-link">
+            <a href="/BK_Poliklinik/pages/dokter/riwayat_pasien" class="nav-link">
               <p>
                 Riwayat Pasien
                 <span class="right badge badge-danger">Dokter</span>
@@ -164,7 +190,7 @@ if($akses != 'dokter'){
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/BK_Poliklinik/pages/dokter/profil" class="nav-link">
               <p>
                 Profil
                 <span class="right badge badge-danger">Dokter</span>
@@ -196,44 +222,116 @@ if($akses != 'dokter'){
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
-      <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Pasien</th>
-                        <th>Alamat</th>
-                        <th>No KTP</th>
-                        <th>No Telepon</th>
-                        <th>No RM</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $result = $pdo->query("SELECT * FROM pasien");
-                    $no = 1;
-                    while($data = $result->fetch(PDO::FETCH_ASSOC)){
-                    ?>
-                    <tr>
-                      <td><?php echo $no++ ?></td>
-                      <td><?php echo $data['nama'] ?></td>
-                      <td><?php echo $data['alamat'] ?></td>
-                      <td><?php echo $data['no_ktp'] ?></td>
-                      <td><?php echo $data['no_hp'] ?></td>
-                      <td><?php echo $data['no_rm'] ?></td>
-                      <td>
-                        <a href="index.php?page=dokter.php&id=<?php echo $data['id'] ?>" class="btn btn-success rounded-pill px-3">Detail Riwayat Periksa</a>
-                      </td>
-                    </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
+    <div class="container-fluid">
+        <div class="card-header">
+          <h3 class="card-title">Daftar Riwayat Pasien</h3>
+        </div>
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Pasien</th>
+                <th>Alamat</th>
+                <th>No. KTP</th>
+                <th>No. Telepon</th>
+                <th>No. RM</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $index = 1;
+              $data = $pdo->query("SELECT * FROM pasien");
+              if($data->rowCount() == 0) {
+                echo "<tr><td colspan='7' align='center'>Tidak ada data</td></tr>";
+              } else {
+                while($d = $data->fetch()){
+              ?>
+                  <tr>
+                    <td><?= $index++; ?></td>
+                    <td><?= $d['nama']; ?></td>
+                    <td><?= $d['alamat']; ?></td>
+                    <td><?= $d['no_ktp']; ?></td>
+                    <td><?= $d['no_hp']; ?></td>
+                    <td><?= $d['no_rm']; ?></td>
+                    <td>
+                      <button type="button" data-toggle="modal" data-target="#detailModal<?= $d['id']; ?>" class="btn btn-info btn-sm">Detail Riwayat Periksa</button>
+                    </td>
+                  </tr>
+                  <!-- Modal Detail Riwayat Periksa start here -->
+                  <?php
+                  $no = 1;
+                  $pasien_id = $d['id'];
+                  $data2 = $pdo->query("SELECT
+                                        p.nama AS 'nama_pasien',
+                                        pr.*,
+                                        d.nama AS 'nama_dokter',
+                                        dpo.keluhan AS 'keluhan',
+                                        GROUP_CONCAT(o.nama_obat SEPARATOR ', ') AS 'obat'
+                                        FROM periksa pr
+                                        LEFT JOIN daftar_poli dpo ON (pr.id_daftar_poli = dpo.id)
+                                        LEFT JOIN jadwal_periksa jp ON (dpo.id_jadwal = jp.id)
+                                        LEFT JOIN dokter d ON (jp.id_dokter = d.id)
+                                        LEFT JOIN pasien p ON (dpo.id_pasien = p.id)
+                                        LEFT JOIN detail_periksa dp ON (pr.id = dp.id_periksa)
+                                        LEFT JOIN obat o ON (dp.id_obat = o.id)
+                                        WHERE dpo.id_pasien = '$pasien_id'
+                                        GROUP BY pr.id
+                                        ORDER BY pr.tgl_periksa DESC;");
+                  ?>
+                  <div class="modal fade" id="detailModal<?= $d['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true" data-backdrop="static">
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalScrollableTitle">Riwayat <?= $d['nama'] ?></h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <!-- Mulai Label  -->
+                          <?php if($data2->rowCount() == 0) : ?>
+                            <h5>Tidak Ditemukan Riwayat Periksa</h5>
+                          <?php else : ?>
+                            <div class="grid-container">
+                              <div class="grid-item">No</div>
+                              <div class="grid-item">Tanggal Periksa</div>
+                              <div class="grid-item">Nama Pasien</div>
+                              <div class="grid-item">Nama Dokter</div>
+                              <div class="grid-item">Keluhan</div>
+                              <div class="grid-item">Catatan</div>
+                              <div class="grid-item">Obat</div>
+                              <div class="grid-item">Biaya Periksa</div>
+                              <?php while ($da = $data2->fetch()) : ?>
+                                <div class="grid-item"><?= $no++; ?></div>
+                                <div class="grid-item"><?= $da['tgl_periksa']; ?></div>
+                                <div class="grid-item"><?= $da['nama_pasien']; ?></div>
+                                <div class="grid-item"><?= $da['nama_dokter']; ?></div>
+                                <div class="grid-item"><?= $da['keluhan']; ?></div>
+                                <div class="grid-item"><?= $da['catatan']; ?></div>
+                                <div class="grid-item"><?= $da['obat']; ?></div>
+                                <div class="grid-item"><?= formatRupiah($da['biaya_periksa']); ?></div>
+                              <?php endwhile ?>
+                              <?php $no = 1; ?>
+                            </div>
+                            <?php endif ?>
+                            <!-- Akhir dari Tabel  -->
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <?php } ?>
+                  <?php } ?>
+            </tbody>
+          </table>
+        </div>
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
@@ -248,10 +346,6 @@ if($akses != 'dokter'){
 </div>
 <!-- ./wrapper -->
 
-<!-- jQuery -->
-<script src="../../../plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="../../../plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
